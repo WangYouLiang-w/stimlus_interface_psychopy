@@ -17,6 +17,10 @@ from pygame.constants import FULLSCREEN
 class StimulateProcess():
 
     def __init__(self):
+        #===========================设置标签接口======================#
+        port = parallel.ParallelPort(address=0xdefc)# 端口地址 107=0xdefc，205=52988
+        port.setData(0)#标签置0
+
         presettingfile = open('PreSettings_Single_tenclass.json')
         settings = json.load(presettingfile)
         self.stimulationLength = settings[u'stimulationLength'][0]    # 刺激时长
@@ -45,7 +49,6 @@ class StimulateProcess():
         self.res_time= []
         self.test_Rects = [] 
         self.c = {}
-        # self.position_stim = [(int(0*self.wc),int(0*self.hc)),(int(-100*self.wc),int(-325*self.hc))]
         self.position_stim =[(int(0*self.wc),int(325*self.hc)),(int(-100*self.wc),int(-325*self.hc)),(int(325*self.wc),int(325*self.hc)),(int(-300*self.wc),int(-325*self.hc)),(int(-525*self.wc),int(100*self.hc)),(int(525*self.wc),int(100*self.hc)),(int(525*self.wc),int(-100*self.hc)),(int(-525*self.wc),int(-100*self.hc)),(int(-325*self.wc),int(325*self.hc)),(int(0*self.wc),int(-125*self.hc)),(int(300*self.wc),int(-325*self.hc)),(int(100*self.wc),int(-325*self.hc))]
         self.startText = 'If you are ready, press the space bar to begin! You can press any key to exit!'
 
@@ -57,6 +60,7 @@ class StimulateProcess():
         ''' 闪烁刺激界面 '''
         win = visual.Window(pos=(0,0),color=(0,0,0),fullscr=self.is_full_screen,colorSpace = 'rgb255',size = (self.w,self.h))
         win.mouseVisible = False # 隐藏鼠标
+        
         
         '''开始提醒'''
         while True:
@@ -91,7 +95,8 @@ class StimulateProcess():
         for loop in self.cueseries:   
             for i in loop:
                 win.flip()
-                # 提示
+
+                ## 提示 ##
                 for t in range(int(self.cuelen*self.framerate)):       # 提示时长
                     # 显示字符串
                     [test_Rect.draw() for test_Rect in self.test_Rects]   
@@ -100,20 +105,29 @@ class StimulateProcess():
                     Rect_cue.draw()
                     [text_stim.draw() for text_stim in self.stim_texts]
                     win.flip()
-                # 刺激
-               
-                for rect_stim in self.stim_Rects:    
+
+                ##  刺激 ##
+                StimulusCount = 1
+                for rect_stim in self.stim_Rects:                        
                     tic = time.time() 
-                    # 画出刺激块
-                    # print("run-{}".format(self.eye_flag))
+
+                    # 打标签
+                    if StimulusCount == 1:
+                        self.port.setData(i+1)
+
+                    if StimulusCount == 3:
+                        self.port.setData(0)
+                    
+                    StimulusCount = StimulusCount + 1
+
+                    rect_stim.draw()
+
+                    # 任意键退出
                     if event.getKeys():
                         print(np.average(self.res_time))
                         win.close()
                         break      
-                    # if self.eye_flag.value != 0:
-                    #     Rect_eyetrack = rect.Rect(win,pos=(self.textposition[str(self.eye_flag.value-1)][0]*self.wc,self.textposition[str(self.eye_flag.value-1)][1]*self.hc),size=(155*self.wc,155*self.hc),units = 'pix',fillColor=(0,255,0),colorSpace = 'rgb255')
-                    #     Rect_eyetrack.draw()
-                    rect_stim.draw()
+                    
                     # 显示提示字符
                     [text_stim.draw() for text_stim in self.stim_texts]
                     win.flip()
