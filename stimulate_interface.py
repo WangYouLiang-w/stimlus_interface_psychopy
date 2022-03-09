@@ -24,7 +24,7 @@ class StimulateProcess():
         self.textList = settings[u'controlCommand']                   # 字符列表
         self.textposition = settings[u'textposition']                 # 字符位置
         self.position = settings[u'position']                         # 刺激块的位置 
-        self.framerate = 60.0                                         # 屏幕刷新频率
+        self.framerate = settings[u'framerate']                                         # 屏幕刷新频率
         self.cueseries =settings[u'cueSeries']                        # 
         self.stimulus_blocks = len(self.position)                 # 刺激块的个数
 

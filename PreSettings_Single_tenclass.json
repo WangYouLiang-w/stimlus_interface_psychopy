@@ -1,6 +1,6 @@
 {
     "controlCommand":{
-        "0":"TakeOff",
+        "0":"TakeOff",      
         "1":"Land",
         "2":"Forward",
         "3":"Down",       
@@ -35,7 +35,7 @@
     "stimulationLength":[2],
     "stimuliLoop":[1],   
     "cuelen":[1.0],
-    "framerate":[90.0],
+    "framerate":[60.0],
     "textposition":{
         "0":[0,325],
         "1":[-100,-325],
