@@ -1,0 +1,2 @@
+# stimlus_interface_psychopy
+psychopy编写的刺激界面
